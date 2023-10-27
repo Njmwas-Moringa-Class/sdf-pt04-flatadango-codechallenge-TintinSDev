@@ -8,16 +8,17 @@ async function fetchFilms() {
     return fetch(`${FILMS_URL}/films`)
 }
 
+const titleName = document.querySelector('#title');
+const runtime = document.querySelector('.meta');
+const description = document.querySelector('.description')
+const filmList = document.querySelector('#films');
+const showtime = document.querySelector('#showtime')
+const card = document.querySelector('#card');
+const posters = document.querySelector('#poster')
+
 
 document.addEventListener('DOMContentLoaded', () => {
-    const titleName = document.querySelector('#title');
-    const runtime = document.querySelector('.meta');
-    const description = document.querySelector('.description')
-    const filmsList = document.querySelector('#films');
-    const showtime = document.querySelector('#showtime')
-    const card = document.querySelector('#card');
-    //poster display
-    const posters = document.querySelector('#poster')
+   
     fetch(`${FILMS_URL}/films`)
         .then((response) => response.json())
         .then(films => {
@@ -25,9 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
             titleName.innerText = films[0].title
             runtime.innerHTML = films[0].runtime
             description.innerHTML = films[0].description
-            films.innerHTML = ''
+            filmList.innerHTML = ''
             for (let film of films) {
-                filmsList.innerHTML += `<li>${film.title.toUpperCase().bold()}</li>`
+                filmList.innerHTML += `<li>${film.title}</li>`
             }
             showtime.textContent = films[0].showtime
 
@@ -37,25 +38,26 @@ document.addEventListener('DOMContentLoaded', () => {
         buyTicket.addEventListener('click', handleSubmit => {
             handleSubmit.preventDefault();
             
-                
-            fetch(`${FILMS_URL}/films`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-    
-                },
-             
-            })
-                .then(res => res.json())
+        }) 
+            filmList.addEventListener('click', (e) => { 
+                e.preventDefault();
+                console.log(e.target.innerText);
+                fetch(`${FILMS_URL}/films`,)
+              .then(res => res.json())
                 .then(films => {
-                    titleName.innerText = films[0].title
+                    for (let film of films) { 
+                        if (film.title === e.target.innerText ) {
+                            posters.src = film.poster
+                            titleName.innerText = film.title
+                            runtime.innerHTML = film.runtime
+                            description.innerHTML = film.description
+                            showtime.textContent = film.showtime
+                        }
+                    }
                 
             })
-        })
-           
-    
-    //Movie titles
-    
-
-                    
+            })
+               
+            
+                        
 })
